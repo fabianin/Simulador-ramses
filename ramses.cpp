@@ -77,9 +77,10 @@ int main(int argc, char const *argv[]){
 						if(ativo(str[13])){
 							PC++;
 						}
-						imprimeRegistradores(rA,rB,rX,PC,rem,rdm,ri);
-						imprimeMemoria(memoriaDados);
 					}
+					system("clear");
+					imprimeRegistradores(rA,rB,rX,PC,rem,rdm,ri);
+					imprimeMemoria(memoriaDados);
 				break;
 			case 2: while(Instrucoes.good()){
 						Instrucoes >> str;
@@ -105,10 +106,12 @@ int main(int argc, char const *argv[]){
 						if(ativo(str[13])){
 							PC++;
 						}
+						system("clear");
 						imprimeRegistradores(rA,rB,rX,PC,rem,rdm,ri);
 						imprimeMemoria(memoriaDados);
 						printf("\n\nDigite qualquer tecla para continuar...\n\n");
 						scanf("%d",&t);
+						
 					}
 				break;
 			}
@@ -202,7 +205,7 @@ int8_t barramentoALU(int8_t x, int8_t y, char ALU1, char ALU2, char ALU3){
 }
 
 void imprimeRegistradores(int8_t ra, int8_t rb, int8_t rx, int8_t pc, uint8_t rem, int8_t rdm,int8_t ri){
-	printf("RA: %d\nRB: %d\nRX: %d\nPC: %d\nREM: %d\nRDM: %d\nRI: %d\n\n",ra,rb,rx,pc,rem,rdm,ri);
+	printf("RA: %4d\nRB: %4d\nRX: %4d\nPC: %4d\nREM: %4d\nRDM:%4d\nRI: %4d\n\n",ra,rb,rx,pc,rem,rdm,ri);
 }
 
 void carregaRegistradores(ifstream *Reg, int8_t *ra,int8_t *rb,int8_t *rx,int8_t *pc){
