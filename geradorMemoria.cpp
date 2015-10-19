@@ -9,7 +9,7 @@ using namespace std;
 int main(){
 	ofstream memoria("memoria.txt");
 	for(int i=0;i<256;i++){
-		memoria << i;
+		memoria << 0;
 		memoria << " ";
 	}
 }
