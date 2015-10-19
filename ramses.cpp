@@ -40,81 +40,76 @@ int main(int argc, char const *argv[]){
     	int8_t rA,rB,rX,PC;
     	int8_t ri=0;
     	int8_t rdm=0;
-    	int count=0, op=0;
-    	uint8_t rem=0;
+    	int count=0, op=0,t;
+    	uint8_t rem=1;
     	string str;
     	queue<string> inst;
     	carregaRegistradores(&Registradores,&rA,&rB,&rX,&PC);
     	printf("\n\n");
     	carregaMemoria(&Memoria,memoriaDados);
-    	while(Instrucoes.good()){
-			Instrucoes >> str;
-			inst.push(str);
-		}
 		do{
 			printf("\n1 - Direto\n2 - Passo a passo\nEscolha sua opcao de execucao: ");
 			scanf("%d",&op);
 		}while(op!=1 && op!=2);
 		switch(op){
 			
-			case 1: while(!inst.empty()){
-					str = inst.front();
-					inst.pop();
-					if((ativo(str[0])+ativo(str[1])+ativo(str[2])+ativo(str[14])+ativo(str[17])+ativo(str[18])+ativo(str[21]))>1){
-						cout << "Instrução inválida, favor verificar linha " << count <<endl;
-					}else if(ativo(str[0])){	// bit de cagra RA
-						rA = barramentoALU(mux12(str[3],str[4],rA,rB,rX),rdm,str[6],str[7],str[8]);
-					}else if(ativo(str[1])){	// bit de cagra RB
-						rB = barramentoALU(mux12(str[3],str[4],rA,rB,rX),rdm,str[6],str[7],str[8]);
-					}else if(ativo(str[2])){	// bit de cagra RX
-						rX = barramentoALU(mux12(str[3],str[4],rA,rB,rX),rdm,str[6],str[7],str[8]);
-					}else if(ativo(str[14])){ 	// bit de cagra PC
-						PC = mux56(str[11],str[12],rdm,rem,rxd(rdm,rX));
-					}else if(ativo(str[17])){ // bit de cagra RI
-						ri = rdm;
-					}else if(ativo(str[18])){ // bit de cagra REM
-						rem = mux34(str[15],str[16], PC, rxd(rdm,rX),rdm);
-					}else if(ativo(str[21])){
-						rdm = mux7(mux12(str[3],str[4],rA,rB,rX),PC,str[22]);
-					}else if(ativo(str[19]) || ativo(str[20])){
-						manipulaMemoria(rem,&rdm,str[20],str[19],memoriaDados);
-					}else if(ativo(str[13])){
-						PC++;
+			case 1: while(Instrucoes.good()){
+						Instrucoes >> str;
+						if((ativo(str[0])+ativo(str[1])+ativo(str[2])+ativo(str[14])+ativo(str[17])+ativo(str[18])+ativo(str[21]))>1){
+							cout << "Instrução inválida, favor verificar linha " << count <<endl;
+						}else if(ativo(str[0])){	// bit de cagra RA
+							rA = barramentoALU(mux12(str[3],str[4],rA,rB,rX),rdm,str[5],str[6],str[7]);
+						}else if(ativo(str[1])){	// bit de cagra RB
+							rB = barramentoALU(mux12(str[3],str[4],rA,rB,rX),rdm,str[5],str[6],str[7]);
+						}else if(ativo(str[2])){	// bit de cagra RX
+							rX = barramentoALU(mux12(str[3],str[4],rA,rB,rX),rdm,str[5],str[6],str[7]);
+						}else if(ativo(str[14])){ 	// bit de cagra PC
+							PC = mux56(str[11],str[12],rdm,rem,rxd(rdm,rX));
+						}else if(ativo(str[17])){ // bit de cagra RI
+							ri = rdm;
+						}else if(ativo(str[18])){ // bit de cagra REM
+							rem = mux34(str[15],str[16], PC, rxd(rdm,rX),rdm);
+						}else if(ativo(str[21])){	///bit de carga de RDM
+							rdm = mux7(mux12(str[3],str[4],rA,rB,rX),PC,str[22]);
+						}else if(ativo(str[19]) || ativo(str[20])){
+							manipulaMemoria(rem,&rdm,str[20],str[19],memoriaDados);
+						}
+						if(ativo(str[13])){
+							PC++;
+						}
+						imprimeRegistradores(rA,rB,rX,PC,rem,rdm,ri);
+						imprimeMemoria(memoriaDados);
 					}
-				}
-				imprimeRegistradores(rA,rB,rX,PC,rem,rdm,ri);
-				imprimeMemoria(memoriaDados);
 				break;
-			case 2: while(!inst.empty()){
-					str = inst.front();
-					inst.pop();
-					if((ativo(str[0])+ativo(str[1])+ativo(str[2])+ativo(str[14])+ativo(str[17])+ativo(str[18])+ativo(str[21]))>1){
-						cout << "Instrução inválida, favor verificar linha " << count <<endl;
-					}else if(ativo(str[0])){	// bit de cagra RA
-						rA = barramentoALU(mux12(str[3],str[4],rA,rB,rX),rdm,str[6],str[7],str[8]);
-					}else if(ativo(str[1])){	// bit de cagra RB
-						rB = barramentoALU(mux12(str[3],str[4],rA,rB,rX),rdm,str[6],str[7],str[8]);
-					}else if(ativo(str[2])){	// bit de cagra RX
-						rX = barramentoALU(mux12(str[3],str[4],rA,rB,rX),rdm,str[6],str[7],str[8]);
-					}else if(ativo(str[14])){ 	// bit de cagra PC
-						PC = mux56(str[11],str[12],rdm,rem,rxd(rdm,rX));
-					}else if(ativo(str[17])){ // bit de cagra RI
-						ri = rdm;
-					}else if(ativo(str[18])){ // bit de cagra REM
-						rem = mux34(str[15],str[16], PC, rxd(rdm,rX),rdm);
-					}else if(ativo(str[21])){
-						rdm = mux7(mux12(str[3],str[4],rA,rB,rX),PC,str[22]);
-					}else if(ativo(str[19]) || ativo(str[20])){
-						manipulaMemoria(rem,&rdm,str[20],str[19],memoriaDados);
-					}else if(ativo(str[13])){
-						PC++;
+			case 2: while(Instrucoes.good()){
+						Instrucoes >> str;
+						if((ativo(str[0])+ativo(str[1])+ativo(str[2])+ativo(str[14])+ativo(str[17])+ativo(str[18])+ativo(str[21]))>1){
+							cout << "Instrução inválida, favor verificar linha " << count <<endl;
+						}else if(ativo(str[0])){	// bit de cagra RA
+							rA = barramentoALU(mux12(str[3],str[4],rA,rB,rX),rdm,str[5],str[6],str[7]);
+						}else if(ativo(str[1])){	// bit de cagra RB
+							rB = barramentoALU(mux12(str[3],str[4],rA,rB,rX),rdm,str[5],str[6],str[7]);
+						}else if(ativo(str[2])){	// bit de cagra RX
+							rX = barramentoALU(mux12(str[3],str[4],rA,rB,rX),rdm,str[5],str[6],str[7]);
+						}else if(ativo(str[14])){ 	// bit de cagra PC
+							PC = mux56(str[11],str[12],rdm,rem,rxd(rdm,rX));
+						}else if(ativo(str[17])){ // bit de cagra RI
+							ri = rdm;
+						}else if(ativo(str[18])){ // bit de cagra REM
+							rem = mux34(str[15],str[16], PC, rxd(rdm,rX),rdm);
+						}else if(ativo(str[21])){	///bit de carga de RDM
+							rdm = mux7(mux12(str[3],str[4],rA,rB,rX),PC,str[22]);
+						}else if(ativo(str[19]) || ativo(str[20])){
+							manipulaMemoria(rem,&rdm,str[20],str[19],memoriaDados);
+						}
+						if(ativo(str[13])){
+							PC++;
+						}
+						imprimeRegistradores(rA,rB,rX,PC,rem,rdm,ri);
+						imprimeMemoria(memoriaDados);
+						printf("\n\nDigite qualquer tecla para continuar...\n\n");
+						scanf("%d",&t);
 					}
-					system("clear");
-					imprimeRegistradores(rA,rB,rX,PC,rem,rdm,ri);
-					imprimeMemoria(memoriaDados);
-					printf("\n\nDigite qualquer tecla para continuar...\n\n");
-					getchar();
-				}
 				break;
 			}
     	
@@ -137,11 +132,11 @@ void manipulaMemoria(uint8_t rem, int8_t *rdm, char w, char r, int8_t *memoria){
 }
 
 int8_t mux34(char S3, char S4, int8_t pc, int8_t rxd, int8_t rdm){
-	if(!ativo(S3) && !ativo(S4)){
+	if(!ativo(S4) && !ativo(S3)){
 		return pc;
-	}else if(!ativo(S3) && ativo(S4)){
+	}else if(!ativo(S4) && ativo(S3)){
 		return rxd;
-	}else if(ativo(S3) && !ativo(S4)){
+	}else if(ativo(S4) && !ativo(S3)){
 		return rdm;
 	}else{
 		return 0;
@@ -161,11 +156,11 @@ int8_t rxd(int8_t rdm, int8_t rx){
 }
 
 int8_t mux12(char S1, char S2, int8_t ra, int8_t rb, int8_t rx){
-	if(!ativo(S1) && !ativo(S2)){
+	if(!ativo(S2) && !ativo(S1)){
 		return ra;
-	}else if(!ativo(S1) && ativo(S2)){
+	}else if(!ativo(S2) && ativo(S1)){
 		return rb;
-	}else if(ativo(S1) && !ativo(S2)){
+	}else if(ativo(S2) && !ativo(S1)){
 		return rx;
 	}else{
 		return 0;
@@ -173,11 +168,11 @@ int8_t mux12(char S1, char S2, int8_t ra, int8_t rb, int8_t rx){
 }
 
 int8_t mux56(char S5, char S6, int8_t rdm, uint8_t rem, int8_t rxd){
-	if(!ativo(S5) && !ativo(S6)){
+	if(!ativo(S6) && !ativo(S5)){
 		return rdm;
-	}else if(!ativo(S5) && ativo(S6)){
+	}else if(!ativo(S6) && ativo(S5)){
 		return rxd;
-	}else if(ativo(S5) && !ativo(S6)){
+	}else if(ativo(S6) && !ativo(S5)){
 		return rem;
 	}else{
 		return 0;
