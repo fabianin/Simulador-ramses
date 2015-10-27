@@ -53,7 +53,6 @@ int main(int argc, char const *argv[]){
 
 			case 1: while(!Instrucoes.eof()){
 						getline(Instrucoes, str);
-						system("clear");
 						if((ativo(str[0])+ativo(str[1])+ativo(str[2])+ativo(str[14])+ativo(str[17])+ativo(str[18])+ativo(str[21]))>1){
 							cout << "Instrução inválida, favor verificar linha " << count <<endl;
 						}else if(ativo(str[0])){	// bit de cagra RA
@@ -76,7 +75,6 @@ int main(int argc, char const *argv[]){
 						if(ativo(str[13])){
 							PC++;
 						}
-						count++;
 					}
 					system("clear");
 					imprimeRegistradores(rA,rB,rX,PC,rem,rdm,ri);
@@ -85,6 +83,7 @@ int main(int argc, char const *argv[]){
 			case 2: while(!Instrucoes.eof()){
 						getline(Instrucoes, str);
 						system("clear");
+						cout << "executando instrução " << str << endl;
 						if((ativo(str[0])+ativo(str[1])+ativo(str[2])+ativo(str[14])+ativo(str[17])+ativo(str[18])+ativo(str[21]))>1){
 							cout << "Instrução inválida, favor verificar linha " << count <<endl;
 						}else if(ativo(str[0])){	// bit de cagra RA
@@ -109,7 +108,7 @@ int main(int argc, char const *argv[]){
 						}
 						imprimeRegistradores(rA,rB,rX,PC,rem,rdm,ri);
 						imprimeMemoria(memoriaDados);
-						printf("\n\nDigite qualquer tecla para continuar...\n");
+						printf("\n\nDigite qualquer tecla para continuar...\n\n");
 						scanf("%d",&t);
 					}
 				break;
@@ -182,7 +181,6 @@ int8_t mux56(char S5, char S6, int8_t rdm, uint8_t rem, int8_t rxd){
 }
 
 int8_t barramentoALU(int8_t x, int8_t y, char ALU1, char ALU2, char ALU3){
-	int8_t z=1;
 	if(ativo(ALU1) && ativo(ALU3) && ativo(ALU3)){
 		return y;
 	}else if(!(ativo(ALU1)) && !(ativo(ALU3)) && !(ativo(ALU3))){
@@ -196,7 +194,7 @@ int8_t barramentoALU(int8_t x, int8_t y, char ALU1, char ALU2, char ALU3){
 		}else if((ativo(ALU1)) && !(ativo(ALU3)) && !(ativo(ALU3))){
 			return ~x;
 		}else if((ativo(ALU1)) && !(ativo(ALU3)) && (ativo(ALU3))){
-			return ~x+z;
+			return x-2*x;
 		}else if((ativo(ALU1)) && (ativo(ALU3)) && !(ativo(ALU3))){
 			return x >> 1;
 		}else{
